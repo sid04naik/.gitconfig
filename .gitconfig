@@ -1,0 +1,101 @@
+[user]
+	name = <name>
+	email = <emailaddress>
+	username = <github/gitlab/bitbucket username>
+[core]
+	editor = nano -w
+	pager = less -F -X
+[color]
+	ui          = true
+	pager       = true
+	interactive = auto
+	grep        = always
+	decorate    = always
+	showbranch  = always
+[color "branch"]
+	current = green bold
+	local   = magenta
+	remote  = cyan
+[color "diff"]
+	meta       = cyan
+	frag       = magenta
+	old        = red
+	new        = green
+	whitespace = yellow reverse
+[color "status"]
+	added     = green
+	changed   = cyan
+	untracked = magenta
+	deleted   = red dim
+	branch    = green bold
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[credential]
+	helper = osxkeychain
+	useHttpPath = true
+[alias]
+	#settings
+	bc = rev-parse --abbrev-ref HEAD
+	bu = !git rev-parse --abbrev-ref --symbolic-full-name "@{u}"
+	#setting Upstream
+	set-up-stream = !git branch --set-upstream-to=$(git bu)
+	# Deleting branch
+	delete-branch = branch -D
+	# displaying branches
+	display-branch = !git branch
+	display-branch-all = !git branch -a
+	#listing git files
+	ls = ls-files
+    #switching branches
+    co-dev = !git checkout dev && git pull origin $(git bc)
+	co-staging = !git checkout staging && git pull origin $(git bc)
+    co-master = !git checkout master && git pull origin master
+	#checkout
+    co = checkout
+    co-branch = checkout -b
+	#cherry-pick
+	cp = cherry-pick
+	cp-abort = cherry-pick --abort
+	cp-continue = cherry-pick --continue
+	#commiting
+	cm = !git commit -m
+    cm-add = !git add -A && git cm
+    cm-edit = commit -a --amend
+	amend = !git commit --amend --no-edit
+    amend-all = !git add -A && git amend
+    #fetching
+	read = !git fetch -p
+	read-all = !git fetch -a -p
+    #Updating
+	up = !git pull --rebase --prune $@
+	update = !git read && git rebase origin/master
+    update-branch = !git pull origin $(git bc)
+    update-master = !git pull origin master
+	#pushing
+	push-master = push origin master
+	push-branch = !git push origin $(git bc)
+	#submodules
+	update-sm = !git pull --recurse-submodules && git submodule update --init --recursive
+	cm-sm = !git cm "SUBMODULE REFERENCE UPDATED"
+    #Saving changes
+    save = !git add -A && git commit -m 'SAVEPOINT'
+    wip = commit -am "WIPPOINT"
+	#Resetting
+    undo = reset HEAD~1 --mixed
+	unstage = reset
+    uncommit = reset --soft HEAD^
+	reset-head = reset HEAD --hard
+	reset-branch = reset --hard $(git bu)
+    wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+    #merging
+	mg = !git merge
+    mg-nf = !git merge --no-ff
+    #logging
+	lg = log
+	lg-lite = log --oneline --decorate
+    lg-latest = log --abbrev-commit --decorate --format=format:'%C(bold red)%h%C(reset) - %C(bold blue)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold yellow)%d%C(reset) %n''%C(dim yellow)%H%C(reset) - %C(white)%s%C(reset) %n''%C(green)-(Committer: %cn <%ce>)%C(reset) %C(dim white)-(Author: %an <%ae>)%C(reset)' -1 HEAD --stat
+    lg-branch = log --graph --abbrev-commit --decorate --format=format:'%C(bold red)%h%C(reset) - %C(bold blue)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold yellow)%d%C(reset) %n''%C(dim yellow)%H%C(reset) - %C(white)%s%C(reset) %n''%C(green)-(Committer: %cn <%ce>)%C(reset) %C(dim white)-(Author: %an <%ae>)%C(reset)' HEAD --stat
+    lg-all = log --graph --abbrev-commit --decorate --format=format:'%C(bold red)%h%C(reset) - %C(bold blue)%aD%C(reset) %C(bold green)(%ar)%C(reset) %C(bold yellow)%d%C(reset) %n''%C(dim yellow)%H%C(reset) - %C(white)%s%C(reset) %n''%C(green)-(Committer: %cn <%ce>)%C(reset) %C(dim white)-(Author: %an <%ae>)%C(reset)' --all --stat
+    lg-mychange = "!myname=$(git config --get user.name);myemail=$(git config --get user.email); git log --graph --abbrev-commit --decorate --author $myemail " HEAD --stat
